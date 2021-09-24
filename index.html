@@ -38,7 +38,7 @@
 </div>
 <div class="container mt-1">
 
-<center> <button type="button" class="btn btn-dark">Run...</button> </center>
+<center> <button onclick= run() type="button" class="btn btn-dark">Run...</button> </center>
 <div class="container mt-3">
 
 <div class="container p-1 my-1 bg-black text-white">
@@ -46,7 +46,7 @@
 </div>
 <div class="container mt-1">
            
- <table hidden class="table table-dark table-striped">
+ <table id = "result_table" style = "visibility: hidden" class="table table-dark table-striped">
    <thead>
      <tr>
        <th>Firstname</th>
@@ -68,4 +68,11 @@
   </table>
 
   </div>
+
+<script> 
+function run() { 
+alert("alert is working")
+document.getElementById("result_table").style.visibility = "block"
+}
+</script>
 </body>
