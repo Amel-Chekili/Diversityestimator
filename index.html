@@ -174,69 +174,7 @@ var name_ethnicity_dictionary = {' ': 31,
 
  
 
-var name_age_dictionary = {' ': 29,
-
- '!': 1,
-
- '?': 2,
-
- 'UNK': 30,
-
- 'a': 3,
-
- 'b': 4,
-
- 'c': 5,
-
- 'd': 6,
-
- 'e': 7,
-
- 'f': 8,
-
- 'g': 9,
-
- 'h': 10,
-
- 'i': 11,
-
- 'j': 12,
-
- 'k': 13,
-
- 'l': 14,
-
- 'm': 15,
-
- 'n': 16,
-
- 'o': 17,
-
- 'p': 18,
-
- 'q': 19,
-
- 'r': 20,
-
- 's': 21,
-
- 't': 22,
-
- 'u': 23,
-
- 'v': 24,
-
- 'w': 25,
-
- 'x': 26,
-
- 'y': 27,
-
- 'z': 28};
-
-  
-
- ethnicity_dictionary = {0: 'Arab',
+ethnicity_dictionary = {0: 'Arab',
 
  1: 'Subsaharan African',
 
@@ -309,8 +247,6 @@ async function loadModels() {
   name_gender_model = await tf.loadLayersModel('name_gender/model.json');
 
   name_ethnicity_model = await tf.loadLayersModel('name_ethnicity/model.json');
-
-  name_age_model = await tf.loadLayersModel('name_age/model.json');
 
   console.log("Models Loaded");
 
@@ -497,52 +433,13 @@ async function predict_name_ethnicity(names) {
 
 
 
-
-async function predict_name_age(names) {
-
-    var tokenized_names = [];
-
-    for (let k = 0; k < names.length; k++){
-
-        var name = names[k];
-
-        var lowercased = name.toLowerCase();
-
-        var name_characters = Array.from(lowercased);
-
-        name_characters.unshift("!");
-
-        name_characters.push("?");
-
-        var tokenized = tokenize(name_characters,name_age_dictionary);
-
-        tokenized_names.push(tokenized);
-
-        
-
-    }
-
-    const tensor = tf.tensor(tokenized_names);
-
-
-
-	const predictions = await name_age_model.predict(tensor).arraySync();
-
-    document.getElementById('age').value = predictions;
-
-
-
-}
-
 var table = [];
 
-var headers = ["Male","Female","Age"].concat(Object.values(ethnicity_dictionary))
+var headers = ["Male","Female"].concat(Object.values(ethnicity_dictionary))
 
 async function analyze(names){
 
     await predict_name_gender(names);
-
-    await predict_name_age(names);
 
     await predict_name_ethnicity(names)
 
@@ -556,7 +453,7 @@ async function analyze(names){
 
      for (let i = 0; i < predictions.length; i++){
 
-         var row = document.getElementById('gender').value[i].concat(document.getElementById('age').value[i]).concat(document.getElementById('ethnicity').value[i]);
+         var row = document.getElementById('gender').value[i].concat(document.getElementById('ethnicity').value[i]);
 
          row = row.map(function(e) {return e.toFixed(4)})
 
@@ -606,7 +503,7 @@ async function analyze(names){
 
 <div class="container my-5 bg-black text-white">
 
-	<h5> <center> Enter full names in the box below to get and estimate their Gender, Age and Ethnicity </center> </h5>
+	<h5> <center> Enter full names in the box below to get and estimate their Gender and Ethnicity </center> </h5>
 
 </div>
 
@@ -700,8 +597,6 @@ async function analyze(names){
 
                    <th>Gender %</th>
 
-             		<th>Birthyear</th>
-
                    <th>Ethnicity 1</th>
 
                    <th>% Ethnicity 1</th>
@@ -735,8 +630,6 @@ async function analyze(names){
 </div>
 
 <div id="gender"></div>
-
-<div id="age"></div>
 
 <div id="ethnicity"></div>
 
@@ -804,7 +697,7 @@ async function run() {
 
     
 
-    document.getElementById("result_table").innerHTML = "<thead><tr><th>Name</th> <th>Gender</th> <th>Gender %</th><th>Birthyear</th> <th>Ethnicity 1</th> <th>Ethnicity 1%</th> <th>Ethnicity 2</th> <th>Ethnicity 2%</th><th>Ethnicity 3</th> <th>Ethnicity 3%</th> </tr> </thead><tbody></tbody>"
+    document.getElementById("result_table").innerHTML = "<thead><tr><th>Name</th> <th>Gender</th> <th>Gender %</th> <th>Ethnicity 1</th> <th>Ethnicity 1%</th> <th>Ethnicity 2</th> <th>Ethnicity 2%</th><th>Ethnicity 3</th> <th>Ethnicity 3%</th> </tr> </thead><tbody></tbody>"
 
 	var names = document.getElementById("inputnames").value.split('\n');
 
@@ -833,8 +726,6 @@ async function run() {
 	    var malepred = row[0];
 
 	    var femalepred = row[1];
-
-	    var agepred = row[2];
 
 	    var ethnicities = row.slice(3, row.length)
 
@@ -895,8 +786,6 @@ async function run() {
 	    }
 
 	    cell = tablerow.insertCell();
-
-	    cell.textContent = agepred + 1940;
 
 	    
 
